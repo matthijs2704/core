@@ -239,8 +239,6 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         (power_state, volume_level, mute_state, input_state, _, _, _) = status
 
-        self._attr_assumed_state = False
-
         if power_state == POWER.POWER_STATE.ON:
             self._power = True
         elif power_state == POWER.POWER_STATE.OFF:
