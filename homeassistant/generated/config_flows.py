@@ -260,6 +260,7 @@ FLOWS = [
     "roon",
     "rpi_power",
     "ruckus_unleashed",
+    "samsungmdc",
     "samsungtv",
     "screenlogic",
     "sense",

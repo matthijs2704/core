@@ -777,6 +777,8 @@ tests/components/ruckus_unleashed/* @gabe565
 homeassistant/components/safe_mode/* @home-assistant/core
 tests/components/safe_mode/* @home-assistant/core
 homeassistant/components/saj/* @fredericvl
+homeassistant/components/samsungmdc/* @matthijs2704
+tests/components/samsungmdc/* @matthijs2704
 homeassistant/components/samsungtv/* @escoand @chemelli74
 tests/components/samsungtv/* @escoand @chemelli74
 homeassistant/components/scene/* @home-assistant/core
