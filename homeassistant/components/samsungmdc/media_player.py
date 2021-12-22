@@ -227,10 +227,11 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         try:
             status = await self.mdc.status(self.display_id)
-        except MDCResponseError:
+        except MDCResponseError as exc:
             # Some unknown value is passed to the MDC library, ignore
             # Possibly switching sources which gives undefined POWER and SOURCE state
-            pass
+            _LOGGER.error("Unknown status received from display", exc_info=exc)
+            await self.mdc.close()
         except MDCError:
             self._available = False
             _LOGGER.exception("Error retrieving status info from display")
