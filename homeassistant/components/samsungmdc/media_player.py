@@ -24,7 +24,6 @@ from homeassistant.const import (
     STATE_OFF,
     STATE_ON,
     STATE_UNAVAILABLE,
-    STATE_UNKNOWN,
 )
 from homeassistant.core import HomeAssistant
 
@@ -201,6 +200,24 @@ class SamsungMDCDisplay(MediaPlayerEntity):
             return None
         return SOURCE_MAP[self._input_source]
 
+    @property
+    def state(self):
+        """Return the state of the display."""
+        if not self.available:
+            return STATE_UNAVAILABLE
+
+        if self._power:
+            return STATE_ON
+        else:
+            return STATE_OFF
+
+    @property
+    def assumed_state(self) -> bool:
+        """If the state is currently assumed or not."""
+        if self._is_awaiting_power_on:
+            return True
+        return False
+
     async def async_update(self):
         """Update the state of the MDC display."""
         if self._is_awaiting_power_on:
@@ -216,7 +233,6 @@ class SamsungMDCDisplay(MediaPlayerEntity):
             pass
         except MDCError:
             self._available = False
-            self._attr_state = STATE_UNAVAILABLE
             _LOGGER.exception("Error retrieving status info from display")
             await self.mdc.close()
             return
@@ -227,13 +243,10 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         if power_state == POWER.POWER_STATE.ON:
             self._power = True
-            self._attr_state = STATE_ON
         elif power_state == POWER.POWER_STATE.OFF:
             self._power = False
-            self._attr_state = STATE_OFF
         elif power_state == POWER.POWER_STATE.REBOOT:
             self._power = False
-            self._attr_state = STATE_UNKNOWN
 
         self._volume = volume_level
 
@@ -249,10 +262,9 @@ class SamsungMDCDisplay(MediaPlayerEntity):
     async def async_turn_on(self, **kwargs):
         """Turn the display on."""
         if not self._power:
-            self._attr_assumed_state = True
+            self._is_awaiting_power_on = True
             await self.mdc.power(self.display_id, [POWER.POWER_STATE.ON])
             self._power = True
-            self._is_awaiting_power_on = True
             await self.mdc.close()  # Force reconnect on next command
             await asyncio.sleep(15)  # Wait 15 seconds to boot, as described by Samsung
             self._is_awaiting_power_on = False
