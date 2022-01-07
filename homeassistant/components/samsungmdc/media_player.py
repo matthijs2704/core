@@ -5,7 +5,7 @@ import logging
 
 from samsung_mdc import MDC
 from samsung_mdc.commands import INPUT_SOURCE, MUTE, POWER
-from samsung_mdc.exceptions import MDCError, MDCResponseError
+from samsung_mdc.exceptions import MDCError, MDCResponseError, MDCReadTimeoutError
 
 from homeassistant import config_entries
 from homeassistant.components.media_player import DEVICE_CLASS_TV, MediaPlayerEntity
@@ -227,6 +227,10 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         try:
             status = await self.mdc.status(self.display_id)
+        except MDCReadTimeoutError as toutExc:
+            # Timeout occurred, close connection
+            self.available = False
+            await self.mdc.close()
         except MDCResponseError as exc:
             # Some unknown value is passed to the MDC library, ignore
             # Possibly switching sources which gives undefined POWER and SOURCE state
