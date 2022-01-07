@@ -869,7 +869,7 @@ pybalboa==0.13
 pyblackbird==0.5
 
 # homeassistant.components.neato
-pybotvac==0.0.22
+pybotvac==0.0.23
 
 # homeassistant.components.cloudflare
 pycfdns==1.2.2
@@ -1240,7 +1240,7 @@ pyuptimerobot==21.11.0
 pyvera==0.3.13
 
 # homeassistant.components.vesync
-pyvesync==1.4.1
+pyvesync==1.4.2
 
 # homeassistant.components.vizio
 pyvizio==0.1.57
