@@ -19,6 +19,7 @@ from homeassistant.components.media_player.const import (
 )
 from homeassistant.const import (
     CONF_HOST,
+    CONF_NAME,
     CONF_TYPE,
     CONF_UNIQUE_ID,
     STATE_OFF,
@@ -116,12 +117,13 @@ async def async_setup_entry(
 ):
     """Set up media player from a config entry created in the integrations UI."""
     config = hass.data[DOMAIN][config_entry.entry_id]
+    name = config[CONF_NAME]
     serial = config[CONF_UNIQUE_ID]
     model_type = config[CONF_TYPE]
     display_id = config[CONF_DISPLAY_ID]
 
     mdc = MDC(config[CONF_HOST])
-    media_player = SamsungMDCDisplay(mdc, serial, model_type, display_id)
+    media_player = SamsungMDCDisplay(mdc, name, serial, model_type, display_id)
 
     async_add_entities([media_player], update_before_add=True)
 
@@ -131,9 +133,10 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
     _attr_device_class = DEVICE_CLASS_TV
 
-    def __init__(self, mdc: MDC, serial: str, model_type: str, display_id: int) -> None:
+    def __init__(self, mdc: MDC, name: str, serial: str, model_type: str, display_id: int) -> None:
         """Initialize a new instance of SamsungMDCDisplay class."""
         super().__init__()
+        self.name = name
         self.mdc = mdc
         self.serial = serial
         self.model_type = model_type
@@ -172,7 +175,7 @@ class SamsungMDCDisplay(MediaPlayerEntity):
     @property
     def name(self):
         """Name of the entity."""
-        return f"Samsung {self.model_type}"
+        return self.name
 
     # @property
     # def state(self):
