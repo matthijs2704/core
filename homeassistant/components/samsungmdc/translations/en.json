@@ -1,22 +1,22 @@
 {
     "config": {
+        "abort": {
+            "no_devices_found": "No devices found on the network",
+            "single_instance_allowed": "Already configured. Only a single configuration possible."
+        },
         "flow_title": "{device}",
         "step": {
-            "user": {
-                "description": "Enter your Samsung TV information. If you never connected Home Assistant before you should see a popup on your TV asking for authorization.",
-                "data": {
-                    "host": "[%key:common::config_flow::data::host%]",
-                    "name": "[%key:common::config_flow::data::name%]",
-                    "display_id": "Display ID"
-                }
-            },
             "confirm": {
-                "description": "[%key:common::config_flow::description::confirm_setup%]"
+                "description": "Do you want to start set up?"
+            },
+            "user": {
+                "data": {
+                    "display_id": "Display ID",
+                    "host": "Host",
+                    "name": "Name"
+                },
+                "description": "Enter your Samsung TV information. If you never connected Home Assistant before you should see a popup on your TV asking for authorization."
             }
-        },
-        "abort": {
-            "single_instance_allowed": "[%key:common::config_flow::abort::single_instance_allowed%]",
-            "no_devices_found": "[%key:common::config_flow::abort::no_devices_found%]"
         }
     }
 }
