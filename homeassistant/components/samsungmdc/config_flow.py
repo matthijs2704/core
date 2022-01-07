@@ -89,7 +89,7 @@ class SamsungMDCConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_TYPE: model_type,
                     },
                 )
-            pass  # TODO: process info
+            pass
 
         data_schema = vol.Schema(
             {

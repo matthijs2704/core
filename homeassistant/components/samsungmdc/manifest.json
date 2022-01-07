@@ -1,7 +1,6 @@
 {
     "domain": "samsungmdc",
     "name": "Samsung MDC",
-    "version": "0.1.0",
     "config_flow": true,
     "documentation": "https://www.home-assistant.io/integrations/samsungmdc",
     "requirements": [
