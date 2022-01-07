@@ -262,7 +262,12 @@ class SamsungMDCDisplay(MediaPlayerEntity):
         """Turn the display on."""
         if not self._power:
             self._is_awaiting_power_on = True
-            await self.mdc.power(self.display_id, [POWER.POWER_STATE.ON])
+            try:
+                await self.mdc.power(self.display_id, [POWER.POWER_STATE.ON])
+            except MDCResponseError:
+                # Samsung displays are weird when powering on and might raise an non-issue exception in the parser,
+                # Let's assume the display is now turning on and will not respond (correctly) for the following 15 seconds.
+                pass
             self._power = True
             await self.mdc.close()  # Force reconnect on next command
             await asyncio.sleep(15)  # Wait 15 seconds to boot, as described by Samsung
