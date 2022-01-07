@@ -5,7 +5,12 @@ import logging
 
 from samsung_mdc import MDC
 from samsung_mdc.commands import INPUT_SOURCE, MUTE, POWER
-from samsung_mdc.exceptions import MDCError, MDCResponseError, MDCReadTimeoutError, NAKError
+from samsung_mdc.exceptions import (
+    MDCError,
+    MDCReadTimeoutError,
+    MDCResponseError,
+    NAKError,
+)
 
 from homeassistant import config_entries
 from homeassistant.components.media_player import DEVICE_CLASS_TV, MediaPlayerEntity
@@ -133,10 +138,12 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
     _attr_device_class = DEVICE_CLASS_TV
 
-    def __init__(self, mdc: MDC, name: str, serial: str, model_type: str, display_id: int) -> None:
+    def __init__(
+        self, mdc: MDC, conf_name: str, serial: str, model_type: str, display_id: int
+    ) -> None:
         """Initialize a new instance of SamsungMDCDisplay class."""
         super().__init__()
-        self.name = name
+        self.conf_name = conf_name
         self.mdc = mdc
         self.serial = serial
         self.model_type = model_type
@@ -152,35 +159,24 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
     @property
     def device_info(self):
+        """Return device properties for MDC display."""
         return {
-            "identifiers": {
-                (DOMAIN, self.unique_id)
-            },
-            "name": self.name,
+            "identifiers": {(DOMAIN, self.unique_id)},
+            "name": self.conf_name,
             "manufacturer": "Samsung",
             "model": self.model_type,
-            "sw_version": self._sw_version
+            "sw_version": self._sw_version,
         }
-        
+
     @property
     def unique_id(self) -> str:
         """Return the unique ID of the sensor."""
         return self.serial
 
-    # @property
-    # def available(self) -> bool:
-    #     """Return True if entity is available."""
-    #     return self._available
-
     @property
     def name(self):
         """Name of the entity."""
-        return self.name
-
-    # @property
-    # def state(self):
-    #     """Return the state of the device."""
-    #     return self._state
+        return self.conf_name
 
     @property
     def volume_level(self):
@@ -235,7 +231,7 @@ class SamsungMDCDisplay(MediaPlayerEntity):
         return False
 
     async def async_update_sw_version(self):
-        """Update software version of the display"""
+        """Retrieve the software version of the display."""
         # Only update the SW version if the display is turned on, otherwise it will NAK
         if self._power:
             try:
@@ -275,7 +271,7 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         if power_state == POWER.POWER_STATE.ON:
             self._power = True
-        
+
         elif power_state == POWER.POWER_STATE.OFF:
             self._power = False
         elif power_state == POWER.POWER_STATE.REBOOT:
@@ -290,12 +286,14 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
         self._input_source = input_state
 
-        print(status)  # Result is always tuple
-
     async def async_execute_power(self, power):
+        """Change the display power state."""
         for _ in range(3):
             try:
-                await self.mdc.power(self.display_id, [POWER.POWER_STATE.ON if power else POWER.POWER_STATE.OFF])
+                await self.mdc.power(
+                    self.display_id,
+                    [POWER.POWER_STATE.ON if power else POWER.POWER_STATE.OFF],
+                )
                 # Power command ACK'd, so successful!
                 return
             except NAKError:
@@ -345,4 +343,6 @@ class SamsungMDCDisplay(MediaPlayerEntity):
 
 
 class MDCPowerNAKError(Exception):
+    """Display power command has failed exception."""
+
     pass
