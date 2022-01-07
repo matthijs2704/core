@@ -9,7 +9,9 @@
     "ssdp": [],
     "zeroconf": [],
     "homekit": {},
-    "dependencies": [],
+    "dependencies": [
+        "media_player"
+    ],
     "codeowners": [
         "@matthijs2704"
     ],
