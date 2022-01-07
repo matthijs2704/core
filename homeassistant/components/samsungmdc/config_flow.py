@@ -83,6 +83,7 @@ class SamsungMDCConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(
                     title=user_input["name"],
                     data={
+                        CONF_NAME: user_input[CONF_NAME],
                         CONF_HOST: user_input[CONF_HOST],
                         CONF_DISPLAY_ID: user_input[CONF_DISPLAY_ID],
                         CONF_UNIQUE_ID: serial,
