@@ -1,6 +1,6 @@
 {
     "domain": "samsungmdc",
-    "name": "Samsung MDC",
+    "name": "Samsung MDC Display",
     "config_flow": true,
     "documentation": "https://www.home-assistant.io/integrations/samsungmdc",
     "requirements": [
